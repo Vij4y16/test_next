@@ -1,0 +1,55 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build the project
+      run: npm run build
+
+    - name: Archive project files
+      run: tar --exclude='./.git' --exclude='./.github' -czf project-files.tar.gz .
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: project-files
+        path: project-files.tar.gz
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: project-files
+        path: ./project
+
+    - name: Add SSH key
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Deploy to server
+      run: |
+        scp -o StrictHostKeyChecking=no ./project/project-files.tar.gz ubuntu@3.92.37.158:/var/www/deploy/
+        ssh -o StrictHostKeyChecking=no ubuntu@3.92.37.158 'tar -xzf /var/www/deploy/project-files.tar.gz -C /var/www/deploy && rm /var/www/deploy/project-files.tar.gz && cd /var/www/deploy && npm install'
