@@ -24,8 +24,13 @@ jobs:
     - name: Build the project
       run: npm run build
 
+    - name: Copy files to temporary directory
+      run: |
+        mkdir temp
+        rsync -a --exclude='.git' --exclude='.github' . temp/
+
     - name: Archive project files
-      run: tar --exclude='./.git' --exclude='./.github' -czf project-files.tar.gz .
+      run: tar -czf project-files.tar.gz -C temp .
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
