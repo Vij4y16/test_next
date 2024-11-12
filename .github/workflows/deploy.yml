@@ -30,7 +30,7 @@ jobs:
           mkdir -p /var/www/test_next
 
           # Clone the repository into the newly created directory
-          git clone git@github.com:Vij4y16/test_next.git /var/www/test_next
+          git clone https://github.com/Vij4y16/test_next.git /var/www/test_next
 
           # Change to the application directory
           cd /var/www/test_next
