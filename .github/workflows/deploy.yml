@@ -22,11 +22,11 @@ jobs:
 
     - name: Deploy on Live Server
       run: |
-        ssh user@18.212.27.181 << 'EOF'
+        ssh ubuntu@18.212.27.181 << 'EOF'
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/vijay  # Use deployment key to access repo
-          cd /path/to/your/node/app
+          cd /var/www/test_next
           git pull origin master
           npm install --production
-          pm2 restart app-name  # Restart Node.js app
+          pm2 restart demo  # Restart Node.js app
         EOF
