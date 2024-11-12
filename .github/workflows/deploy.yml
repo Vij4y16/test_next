@@ -3,7 +3,7 @@ name: Deploy Node.js App
 on:
   push:
     branches:
-      - main  # Deploy when changes are pushed to the main branch this
+      - main  # Deploy when changes are pushed to the main branch
 
 jobs:
   deploy:
@@ -20,27 +20,6 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H 18.212.27.181 >> ~/.ssh/known_hosts
 
-    - name: Deploy on Live Server
+    - name: Trigger Deployment Script on Live Server
       run: |
-        ssh ubuntu@18.212.27.181 << 'EOF'
-          # Remove existing test_next directory if it exists
-          rm -rf /var/www/test_next
-
-          # Recreate the directory
-          mkdir -p /var/www/test_next
-
-          # Clone the repository into the newly created directory
-          git clone https://github.com/Vij4y16/test_next.git /var/www/test_next
-
-          # Change to the application directory
-          cd /var/www/test_next
-
-          # Check out the main branch (or master branch if that's your default branch)
-          git checkout main
-
-          # Install production dependencies
-          npm install --production
-
-          # Restart the Node.js app using PM2
-          pm2 restart demo  # Restart your app
-        EOF
+        ssh ubuntu@18.212.27.181 'bash /var/tmp/test/deploy.sh'
