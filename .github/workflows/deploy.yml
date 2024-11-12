@@ -18,11 +18,11 @@ jobs:
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H live-server.com >> ~/.ssh/known_hosts
+        ssh-keyscan -H 18.212.27.181 >> ~/.ssh/known_hosts
 
     - name: Deploy on Live Server
       run: |
-        ssh user@live-server << 'EOF'
+        ssh user@18.212.27.181 << 'EOF'
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/vijay  # Use deployment key to access repo
           cd /path/to/your/node/app
