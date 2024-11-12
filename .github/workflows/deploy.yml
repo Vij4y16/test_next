@@ -3,7 +3,7 @@ name: Deploy Node.js App
 on:
   push:
     branches:
-      - main  # Deploy when changes are pushed to master branch11
+      - main  # Deploy when changes are pushed to the main branch
 
 jobs:
   deploy:
@@ -23,10 +23,24 @@ jobs:
     - name: Deploy on Live Server
       run: |
         ssh ubuntu@18.212.27.181 << 'EOF'
-          eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/vijay  # Use deployment key to access repo
+          # Remove existing test_next directory if it exists
+          rm -rf /var/www/test_next
+
+          # Recreate the directory
+          mkdir -p /var/www/test_next
+
+          # Clone the repository into the newly created directory
+          git clone git@github.com:Vij4y16/test_next.git /var/www/test_next
+
+          # Change to the application directory
           cd /var/www/test_next
-          git pull origin master
+
+          # Check out the main branch (or master branch if that's your default branch)
+          git checkout main
+
+          # Install production dependencies
           npm install --production
-          pm2 restart demo  # Restart Node.js app
+
+          # Restart the Node.js app using PM2
+          pm2 restart demo  # Restart your app
         EOF
