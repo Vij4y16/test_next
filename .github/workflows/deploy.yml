@@ -3,7 +3,7 @@ name: Deploy Node.js App
 on:
   push:
     branches:
-      - main  # Run this workflow when code is pushed to the master branch
+      - main  # Run this workflow when code is pushed to the master branch1
 
 jobs:
   deploy:
