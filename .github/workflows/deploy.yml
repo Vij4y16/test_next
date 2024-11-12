@@ -3,28 +3,30 @@ name: Deploy Node.js App
 on:
   push:
     branches:
-      - main  # Run this workflow when code is pushed to the master branch1
+      - main  # Deploy when changes are pushed to master branch
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # Use the latest Ubuntu GitHub Actions runner
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v3
 
-    - name: Set up SSH
+    - name: Set up SSH to Live Server
       run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H live-server.com >> ~/.ssh/known_hosts
 
-    - name: Deploy to Live Server
+    - name: Deploy on Live Server
       run: |
-        ssh user@live-server.com << 'EOF'
+        ssh user@live-server << 'EOF'
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/vijay  # Use deployment key to access repo
           cd /path/to/your/node/app
           git pull origin master
-          npm install --production  # Install only production dependencies
-          pm2 restart app-name      # Restart the Node.js app using PM2
+          npm install --production
+          pm2 restart app-name  # Restart Node.js app
         EOF
