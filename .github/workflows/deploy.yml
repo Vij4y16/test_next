@@ -19,9 +19,10 @@ jobs:
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H 52.87.164.33 >> ~/.ssh/known_hosts
+        
     - name: Trigger Deployment Script on Live Server
       run: |
-        ssh ubuntu@52.87.164.33 << 'EOF'
-          mkdir -p /var/www/new_directory   # Create the directory if it doesn't already exist
-          bash /var/tmp/test/deploy.sh     # Trigger the deployment script
-        EOF
+        ssh ubuntu@52.87.164.33 'mkdir /var/www/vijay'
+        
+
+
