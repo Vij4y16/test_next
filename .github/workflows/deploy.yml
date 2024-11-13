@@ -22,4 +22,4 @@ jobs:
 
     - name: Trigger Deployment Script on Live Server
       run: |
-        ssh ubuntu@145.223.23.191 'bash /var/tmp/test/deploy.sh'
+        ssh root@145.223.23.191 'bash /var/tmp/test/deploy.sh'
