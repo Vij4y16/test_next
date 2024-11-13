@@ -22,4 +22,4 @@ jobs:
 
     - name: Trigger Deployment Script on Live Server
       run: |
-        ssh root@${{ secrets.IP }} 'bash ${${{ secrets.SCRIPT_PATH }}/deploy.sh}'
+        ssh root@${{ secrets.IP }} "bash '${{ secrets.SCRIPT_PATH }}/deploy.sh'"
